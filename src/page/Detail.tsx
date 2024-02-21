@@ -195,6 +195,7 @@ export default function Detail() {
     if (id) {
       fetchData();
       setIntentName(id);
+      console.log(data)
 
     }
 
