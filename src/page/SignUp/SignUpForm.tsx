@@ -125,7 +125,7 @@ export default function SignUp() {
       userId = profile.userId;
       console.log('profile: ', profile)
       console.log('line_userID: ', userId);
-      axios.post(`${url}/line/getUserLine`, userId)
+      axios.post(`${url}/line/getUserLine`, {line_uid:profile.userId})
         .then(response => {
 
           console.log('Response:', response.data);
