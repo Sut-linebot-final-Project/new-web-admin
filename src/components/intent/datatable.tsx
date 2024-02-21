@@ -1,0 +1,116 @@
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { Alert, Box, Button, ButtonGroup, Snackbar } from '@mui/material';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { url } from '../../service/serviceUrl';
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
+
+interface intent {
+    id: string,
+    displayName: string,
+}
+
+function timeout(delay: number) {
+    return new Promise(res => setTimeout(res, delay));
+}
+
+const IntentTable: React.FC<{ intentData: intent[] }> = ({ intentData }) => {
+    const [openSnack, setOpenSnack] = React.useState(false);
+    const hadleDelete = (intentId: string) => {
+        const data = {
+            intentId
+        }
+        const apiUrl = `${url}/deleteIntent`;
+        axios.post(apiUrl, data)
+            .then(async response => {
+                console.log('Response:', response.data);
+                setOpenSnack(true);
+                await timeout(1000);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+
+    }
+    return (
+        <Box sx={{height:'70vh'}}>
+            <TableContainer sx={{ maxHeight: '70vh '}}>
+                <Snackbar open={openSnack} autoHideDuration={100} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                    <Alert
+                        severity="success"
+                        variant="filled"
+                        color='error'
+                        sx={{ width: '100%' }}
+                    >
+                        ลบสำเร็จ
+                    </Alert>
+                </Snackbar>
+                <Table stickyHeader sx={{ maxWidth: '100%'}} aria-label="customized table">
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>หัวข้อ</StyledTableCell>
+                            <StyledTableCell align="center">จำนวนการตอบกลับ</StyledTableCell>
+                            <StyledTableCell align="center">Action</StyledTableCell>
+
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {intentData.map((intent) => (
+                            <StyledTableRow key={intent.id}>
+                                <StyledTableCell component="th" scope="row">
+                                    {intent.displayName}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                    0
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+
+                                    <ButtonGroup variant="contained" aria-label="Basic button group" >
+                                        <Link to={`/Detail/${intent.displayName}`} >
+                                            <Button color='secondary'>แก้ไข</Button>
+                                        </Link>
+                                        <Button color='error' onClick={() => hadleDelete(intent.id)}>ลบ</Button>
+                                    </ButtonGroup>
+
+                                </StyledTableCell>
+
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
+    );
+}
+
+export default IntentTable;
