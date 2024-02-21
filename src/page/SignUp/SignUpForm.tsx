@@ -147,7 +147,7 @@ export default function SignUp() {
     main()
   });
 
-  if (isUser) {
+  if (!isUser) {
     return (
 
       <ThemeProvider theme={Theme}>
