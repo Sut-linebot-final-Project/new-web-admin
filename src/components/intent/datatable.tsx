@@ -40,9 +40,30 @@ interface intent {
 function timeout(delay: number) {
     return new Promise(res => setTimeout(res, delay));
 }
+interface Icountres {
+    intent: string,
+    response: string
+}
 
 const IntentTable: React.FC<{ intentData: intent[] }> = ({ intentData }) => {
     const [openSnack, setOpenSnack] = React.useState(false);
+
+    const [countRes, setCountRes] = React.useState<Icountres[]>([])
+
+
+    async function getCountRes() {
+        const apiUrl = `${url}/pg/countRes`;
+        axios.get(apiUrl)
+            .then(response => {
+                console.log('API Response:', response.data);
+                setCountRes(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+    }
+
     const hadleDelete = (intentId: string) => {
         const data = {
             intentId
@@ -61,9 +82,22 @@ const IntentTable: React.FC<{ intentData: intent[] }> = ({ intentData }) => {
 
 
     }
+    const filterdata = (intent: string) => {
+        console.log(intent);
+        console.log(countRes);
+        const result = countRes.filter(item => item.intent == intent)
+        // console.log(result);
+        if (result.length > 0) {
+            return result[0].response
+        } 
+        return 0
+    }
+    React.useEffect(() => {
+        getCountRes();
+    }, []);
     return (
-        <Box sx={{height:'70vh'}}>
-            <TableContainer sx={{ maxHeight: '70vh '}}>
+        <Box sx={{ height: '70vh' }}>
+            <TableContainer sx={{ maxHeight: '70vh ' }}>
                 <Snackbar open={openSnack} autoHideDuration={100} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                     <Alert
                         severity="success"
@@ -74,7 +108,7 @@ const IntentTable: React.FC<{ intentData: intent[] }> = ({ intentData }) => {
                         ลบสำเร็จ
                     </Alert>
                 </Snackbar>
-                <Table stickyHeader sx={{ maxWidth: '100%'}} aria-label="customized table">
+                <Table stickyHeader sx={{ maxWidth: '100%' }} aria-label="customized table">
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>หัวข้อ</StyledTableCell>
@@ -90,7 +124,7 @@ const IntentTable: React.FC<{ intentData: intent[] }> = ({ intentData }) => {
                                     {intent.displayName}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
-                                    0
+                                    {filterdata(intent.displayName)}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
 

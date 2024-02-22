@@ -1,6 +1,8 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import "./pieChartBox.scss";
 
+
+
 const data = [
   { name: "Default Fallback Intent", value: 50, color: "#0088FE" },
   { name: "Default Welcome Intent", value: 6, color: "#00C49F" },
@@ -8,10 +10,13 @@ const data = [
   { name: "Hello", value: 20, color: "#FF8042" },
 ];
 
+// React.useEffect(() => {
+
+// }, []);
 const PieChartBox = () => {
   return (
     <div className="pieChartBox">
-      <h1>Leads by Source</h1>
+      <h1>การตอบกลับ</h1>
       <div className="chart">
         <ResponsiveContainer width="99%" height={300}>
           <PieChart>
@@ -24,9 +29,10 @@ const PieChartBox = () => {
               outerRadius={"90%"}
               paddingAngle={5}
               dataKey="value"
+              fill="#8884d8"
             >
               {data.map((item) => (
-                <Cell key={item.name} fill={item.color} />
+                <Cell key={item.name} />
               ))}
             </Pie>
           </PieChart>

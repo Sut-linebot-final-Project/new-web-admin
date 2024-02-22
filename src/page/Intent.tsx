@@ -24,6 +24,8 @@ async function getIntent() {
   return res
 
 }
+
+
 const BodyPaper = styled(Paper)(({ theme }) => ({
   width: '100%',
   // height: '80vh',
@@ -37,7 +39,7 @@ const BodyPaper = styled(Paper)(({ theme }) => ({
 const Intent = () => {
   // const [open, setOpen] = React.useState(false);
   const [intent, setIntent] = React.useState([]);
-
+ 
   const listIntent = async () => {
     let res = await getIntent();
     if (res) {
@@ -49,7 +51,7 @@ const Intent = () => {
     listIntent();
   }, []);
   return (
-    <Box sx={{ flexGrow: 0, mx: 10, mb:10, mt: 10, maxHeight: "80vh"}}>
+    <Box sx={{ flexGrow: 0, mx: 10, mb: 10, mt: 10, maxHeight: "80vh" }}>
       <BodyPaper elevation={12}>
         {/* <h1>หัวข้อ</h1> */}
         <Box sx={{ textAlign: 'end' }}>
